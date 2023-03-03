@@ -9,14 +9,14 @@ import (
 )
 
 type ApiServer struct {
-	ListenAddr string
-	Store      db.Storage
+	listenAddr string
+	store      db.Storage
 }
 
 func NewApiServer(listenAddr string, store db.Storage) *ApiServer {
 	return &ApiServer{
-		ListenAddr: listenAddr,
-		Store:      store,
+		listenAddr: listenAddr,
+		store:      store,
 	}
 }
 
@@ -27,6 +27,7 @@ func NewRouter() *mux.Router {
 
 func (s *ApiServer) Run() {
 	router := NewRouter()
-	log.Println("Starting server at port ", s.ListenAddr)
-	http.ListenAndServe(s.ListenAddr, router)
+	userRouter(router, s)
+	log.Println("Starting server at port ", s.listenAddr)
+	http.ListenAndServe(s.listenAddr, router)
 }

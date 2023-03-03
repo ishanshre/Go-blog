@@ -4,7 +4,7 @@ import (
 	"log"
 
 	"github.com/ishanshre/Go-blog/api/v1/db"
-	routers "github.com/ishanshre/Go-blog/api/v1/handlerAndRouters/routers"
+	"github.com/ishanshre/Go-blog/api/v1/handlerAndRouters"
 )
 
 func main() {
@@ -12,7 +12,7 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	server := routers.NewApiServer(":8000", store)
+	server := handlerAndRouters.NewApiServer(":8000", store)
 	server.Run()
 
 }
