@@ -1,8 +1,11 @@
 package middlewares
 
 import (
+	"database/sql"
 	"encoding/json"
 	"net/http"
+
+	"github.com/ishanshre/Go-blog/api/v1/models"
 )
 
 type ApiFunc func(http.ResponseWriter, *http.Request) error // signature of our handler
@@ -27,4 +30,13 @@ func MakeHttpHandler(f ApiFunc) http.HandlerFunc {
 			WriteJSON(w, http.StatusBadRequest, ApiError{Error: err.Error()})
 		}
 	}
+}
+
+func ScanUserPass(rows *sql.Rows) (*models.UserPass, error) {
+	user := new(models.UserPass)
+	err := rows.Scan(
+		&user.ID,
+		&user.Password,
+	)
+	return user, err
 }

@@ -13,6 +13,8 @@ import (
 
 type Storage interface {
 	UserSignUp(*models.RegsiterUser) error
+	UserLogin(string) (*models.UserPass, error)
+	UpdateLastLogin(int) error
 }
 
 type PostgresStore struct {

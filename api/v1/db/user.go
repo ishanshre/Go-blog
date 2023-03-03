@@ -2,7 +2,9 @@ package db
 
 import (
 	"fmt"
+	"time"
 
+	"github.com/ishanshre/Go-blog/api/v1/middlewares"
 	"github.com/ishanshre/Go-blog/api/v1/models"
 )
 
@@ -39,4 +41,30 @@ func (s *PostgresStore) UserSignUp(user *models.RegsiterUser) error {
 		return fmt.Errorf("error in creating new user")
 	}
 	return nil
+}
+
+func (s *PostgresStore) UserLogin(username string) (*models.UserPass, error) {
+	query := `
+		SELECT id, password FROM users
+		WHERE username = $1
+	`
+	rows, err := s.db.Query(query, username)
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		return middlewares.ScanUserPass(rows)
+	}
+	return nil, fmt.Errorf("username: %v not found", username)
+}
+
+func (s *PostgresStore) UpdateLastLogin(id int) error {
+	query := `
+		UPDATE users
+		SET last_login = $2
+		WHERE id = $1
+	`
+	s.db.Exec("COMMIT")
+	_, err := s.db.Query(query, id, time.Now())
+	return err
 }
