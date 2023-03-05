@@ -1,11 +1,12 @@
 package middlewares
 
 import (
-	"database/sql"
 	"encoding/json"
+	"fmt"
 	"net/http"
+	"strconv"
 
-	"github.com/ishanshre/Go-blog/api/v1/models"
+	"github.com/gorilla/mux"
 )
 
 type ApiFunc func(http.ResponseWriter, *http.Request) error // signature of our handler
@@ -32,11 +33,11 @@ func MakeHttpHandler(f ApiFunc) http.HandlerFunc {
 	}
 }
 
-func ScanUserPass(rows *sql.Rows) (*models.UserPass, error) {
-	user := new(models.UserPass)
-	err := rows.Scan(
-		&user.ID,
-		&user.Password,
-	)
-	return user, err
+func GetId(r *http.Request) (int, error) {
+	idstr := mux.Vars(r)["id"]
+	id, err := strconv.Atoi(idstr)
+	if err != nil {
+		return id, fmt.Errorf("error in parsing the url paramater")
+	}
+	return id, nil
 }

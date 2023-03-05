@@ -15,6 +15,8 @@ type Storage interface {
 	UserSignUp(*models.RegsiterUser) error
 	UserLogin(string) (*models.UserPass, error)
 	UpdateLastLogin(int) error
+	UserInfoById(int) (*models.User, error)
+	UsersAll() ([]*models.User, error)
 }
 
 type PostgresStore struct {

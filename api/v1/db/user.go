@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/ishanshre/Go-blog/api/v1/middlewares"
 	"github.com/ishanshre/Go-blog/api/v1/models"
 )
 
@@ -53,7 +52,7 @@ func (s *PostgresStore) UserLogin(username string) (*models.UserPass, error) {
 		return nil, err
 	}
 	for rows.Next() {
-		return middlewares.ScanUserPass(rows)
+		return ScanUserPass(rows)
 	}
 	return nil, fmt.Errorf("username: %v not found", username)
 }
@@ -67,4 +66,40 @@ func (s *PostgresStore) UpdateLastLogin(id int) error {
 	s.db.Exec("COMMIT")
 	_, err := s.db.Query(query, id, time.Now())
 	return err
+}
+
+func (s *PostgresStore) UserInfoById(id int) (*models.User, error) {
+	query := `
+		SELECT * FROM users
+		WHERE id = $1
+	`
+	rows, err := s.db.Query(query, id)
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		return ScanUser(rows)
+	}
+	return nil, fmt.Errorf("account with id %v not found", id)
+}
+
+func (s *PostgresStore) UsersAll() ([]*models.User, error) {
+	query := `
+		SELECT * FROM users
+	`
+	users := []*models.User{}
+	rows, err := s.db.Query(query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		user, err := ScanUser(rows)
+		if err != nil {
+			return nil, err
+		}
+		users = append(users, user)
+
+	}
+	return users, nil
 }

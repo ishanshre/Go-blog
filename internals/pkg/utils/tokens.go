@@ -48,7 +48,7 @@ func ExtractToken(r *http.Request) (string, error) {
 	/*
 		This method extracts token from the header
 	*/
-	bearerToken := r.Header.Get("Authotrization")
+	bearerToken := r.Header.Get("Authorization")
 	tokenString := strings.Split(bearerToken, " ")
 	if len(tokenString) == 2 {
 		return tokenString[1], nil
