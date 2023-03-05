@@ -79,3 +79,18 @@ func (s *ApiServer) handleUsersAll(w http.ResponseWriter, r *http.Request) error
 	}
 	return fmt.Errorf("%s method not allowed", r.Method)
 }
+
+func (s *ApiServer) handleMe(w http.ResponseWriter, r *http.Request) error {
+	if r.Method == "GET" {
+		userData, err := utils.ExractTokenMetaData(r)
+		if err != nil {
+			return err
+		}
+		user, err := s.store.UserInfoById(userData.ID)
+		if err != nil {
+			return err
+		}
+		return middlewares.WriteJSON(w, http.StatusOK, user)
+	}
+	return fmt.Errorf("%s method not allowed", r.Method)
+}
