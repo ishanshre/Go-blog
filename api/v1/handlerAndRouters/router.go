@@ -28,6 +28,7 @@ func NewRouter() *mux.Router {
 func (s *ApiServer) Run() {
 	router := NewRouter()
 	userRouter(router, s)
+	tagRouter(router, s)
 	log.Println("Starting server at port ", s.listenAddr)
 	http.ListenAndServe(s.listenAddr, router)
 }

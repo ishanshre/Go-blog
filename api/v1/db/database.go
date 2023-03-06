@@ -12,12 +12,20 @@ import (
 )
 
 type Storage interface {
+	// User Interface
 	UserSignUp(*models.RegsiterUser) error
 	UserLogin(string) (*models.UserPass, error)
 	UpdateLastLogin(int) error
 	UserInfoById(int) (*models.User, error)
 	UsersAll() ([]*models.User, error)
 	UserDelete(int) error
+
+	// Tag Interface
+	TagCreate(*models.Tag) error
+	TagAll(int, int) ([]*models.Tag, error)
+	TagDelete(int) error
+	TagUpdate(int, *models.CreateTagRequest) error
+	TagByID(int) (*models.Tag, error)
 }
 
 type PostgresStore struct {

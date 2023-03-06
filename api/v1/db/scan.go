@@ -31,3 +31,14 @@ func ScanUser(rows *sql.Rows) (*models.User, error) {
 	)
 	return user, err
 }
+
+func ScanTags(rows *sql.Rows) (*models.Tag, error) {
+	tag := new(models.Tag)
+	err := rows.Scan(
+		&tag.ID,
+		&tag.Name,
+		&tag.CreatedAt,
+		&tag.UpdatedAt,
+	)
+	return tag, err
+}
