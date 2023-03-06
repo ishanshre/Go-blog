@@ -17,6 +17,7 @@ type Storage interface {
 	UpdateLastLogin(int) error
 	UserInfoById(int) (*models.User, error)
 	UsersAll() ([]*models.User, error)
+	UserDelete(int) error
 }
 
 type PostgresStore struct {

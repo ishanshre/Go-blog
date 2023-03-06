@@ -10,6 +10,8 @@ import (
 func (s *PostgresStore) UserSignUp(user *models.RegsiterUser) error {
 	query := `
 		INSERT INTO users (
+			first_name,
+			last_name,
 			username,
 			email,
 			password,
@@ -17,11 +19,13 @@ func (s *PostgresStore) UserSignUp(user *models.RegsiterUser) error {
 			updated_at,
 			last_login
 		) VALUES (
-			$1, $2, $3, $4, $5, $6 
+			$1, $2, $3, $4, $5, $6, $7, $8
 		)
 	`
 	rows, err := s.db.Exec(
 		query,
+		user.FirstName,
+		user.LastName,
 		user.Username,
 		user.Email,
 		user.Password,
@@ -102,4 +106,24 @@ func (s *PostgresStore) UsersAll() ([]*models.User, error) {
 
 	}
 	return users, nil
+}
+
+func (s *PostgresStore) UserDelete(id int) error {
+	query := `
+		DELETE FROM users
+		WHERE id = $1
+	`
+	s.db.Exec("COMMIT")
+	rows, err := s.db.Exec(query, id)
+	if err != nil {
+		return err
+	}
+	rows_affected, err := rows.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if rows_affected == 0 {
+		return fmt.Errorf("error in deleting user")
+	}
+	return nil
 }

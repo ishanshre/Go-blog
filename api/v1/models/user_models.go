@@ -28,6 +28,8 @@ type RegsiterUser struct {
 }
 
 type RegisterUserRequest struct {
+	FirstName string    `json:"first_name"`
+	LastName  string    `json:"last_name"`
 	Username  string    `json:"username"`
 	Email     string    `json:"email"`
 	Password  string    `json:"password"`
@@ -56,8 +58,10 @@ type LoginRequest struct {
 	Password string `json:"password"`
 }
 
-func RegisterNewUser(username, email, password string) *RegsiterUser {
+func RegisterNewUser(firstName, lastName, username, email, password string) *RegsiterUser {
 	return &RegsiterUser{
+		FirstName: firstName,
+		LastName:  lastName,
 		Username:  username,
 		Email:     email,
 		Password:  password,

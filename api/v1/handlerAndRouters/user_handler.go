@@ -20,7 +20,7 @@ func (s *ApiServer) handleUserSignUp(w http.ResponseWriter, r *http.Request) err
 		if err != nil {
 			return err
 		}
-		user := models.RegisterNewUser(req.Username, req.Email, encPass)
+		user := models.RegisterNewUser(req.FirstName, req.LastName, req.Username, req.Email, encPass)
 		if err := s.store.UserSignUp(user); err != nil {
 			return err
 		}
@@ -54,19 +54,36 @@ func (s *ApiServer) handleUserLogin(w http.ResponseWriter, r *http.Request) erro
 	return fmt.Errorf("%s method not allowed", r.Method)
 }
 
-func (s *ApiServer) handleUserInfoById(w http.ResponseWriter, r *http.Request) error {
+func (s *ApiServer) handleUserById(w http.ResponseWriter, r *http.Request) error {
 	if r.Method == "GET" {
-		id, err := middlewares.GetId(r)
-		if err != nil {
-			return err
-		}
-		user, err := s.store.UserInfoById(id)
-		if err != nil {
-			return err
-		}
-		return middlewares.WriteJSON(w, http.StatusOK, user)
+		return s.handleUserInfoById(w, r)
+	}
+	if r.Method == "DELETE" {
+		return s.handleDeleteUserById(w, r)
 	}
 	return fmt.Errorf("%s method not allowed", r.Method)
+}
+func (s *ApiServer) handleUserInfoById(w http.ResponseWriter, r *http.Request) error {
+	id, err := middlewares.GetId(r)
+	if err != nil {
+		return err
+	}
+	user, err := s.store.UserInfoById(id)
+	if err != nil {
+		return err
+	}
+	return middlewares.WriteJSON(w, http.StatusOK, user)
+}
+
+func (s *ApiServer) handleDeleteUserById(w http.ResponseWriter, r *http.Request) error {
+	id, err := middlewares.GetId(r)
+	if err != nil {
+		return err
+	}
+	if err := s.store.UserDelete(id); err != nil {
+		return err
+	}
+	return middlewares.WriteJSON(w, http.StatusOK, middlewares.ApiSuccess{Success: "user deleted"})
 }
 
 func (s *ApiServer) handleUsersAll(w http.ResponseWriter, r *http.Request) error {
