@@ -47,3 +47,8 @@ func GetId(r *http.Request) (int, error) {
 	}
 	return id, nil
 }
+
+func GetSlug(r *http.Request) string {
+	slug := mux.Vars(r)["slug"]
+	return slug
+}

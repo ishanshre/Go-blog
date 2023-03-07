@@ -14,7 +14,7 @@ CREATE TABLE "users" (
 CREATE TABLE "posts" (
     id SERIAL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
-    slug VARCHAR(255),
+    slug VARCHAR(255) UNIQUE,
     pic VARCHAR(255),
     content VARCHAR(10000),
     created_at TIMESTAMPTZ,

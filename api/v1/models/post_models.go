@@ -31,6 +31,10 @@ type NewPostRequest struct {
 	Content string `json:"content"`
 }
 
+type PostPic struct {
+	Pic string `json:"pic"`
+}
+
 func NewPostCreate(title, content, pic string, user_id int) *NewPost {
 	slugCreate := slug.Make(title)
 	return &NewPost{

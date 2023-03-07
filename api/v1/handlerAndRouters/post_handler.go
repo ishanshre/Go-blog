@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/gorilla/mux"
 	"github.com/ishanshre/Go-blog/api/v1/middlewares"
@@ -52,16 +53,35 @@ func (s *ApiServer) handlePostAll(w http.ResponseWriter, r *http.Request) error 
 	return middlewares.MethodNotAlowed(w, r.Method)
 }
 
-func (s *ApiServer) handlePostGetBySlug(w http.ResponseWriter, r *http.Request) error {
+func (s *ApiServer) handlePostBySlug(w http.ResponseWriter, r *http.Request) error {
 	if r.Method == "GET" {
-		slug := mux.Vars(r)["slug"]
-		protocol := utils.CheckHttpProtocol(r)
-		domain := fmt.Sprintf("%s://%s", protocol, r.Host)
-		post, err := s.store.PostGetBySlug(slug, domain)
-		if err != nil {
-			return err
-		}
-		return middlewares.WriteJSON(w, http.StatusOK, post)
+		return s.handlePostGetBySlug(w, r)
+	}
+	if r.Method == "DELETE" {
+		return s.handlePostDeleteBySlug(w, r)
 	}
 	return middlewares.MethodNotAlowed(w, r.Method)
+}
+func (s *ApiServer) handlePostGetBySlug(w http.ResponseWriter, r *http.Request) error {
+	slug := mux.Vars(r)["slug"]
+	protocol := utils.CheckHttpProtocol(r)
+	domain := fmt.Sprintf("%s://%s", protocol, r.Host)
+	post, err := s.store.PostGetBySlug(slug, domain)
+	if err != nil {
+		return err
+	}
+	return middlewares.WriteJSON(w, http.StatusOK, post)
+}
+
+func (s *ApiServer) handlePostDeleteBySlug(w http.ResponseWriter, r *http.Request) error {
+	slug := middlewares.GetSlug(r)
+	filename, err := s.store.PostDelete(slug)
+	if err != nil {
+		return err
+	}
+	path := fmt.Sprintf("./media/uploads/posts/%s", filename.Pic)
+	if err := os.Remove(path); err != nil {
+		return err
+	}
+	return middlewares.WriteJSON(w, http.StatusOK, middlewares.ApiSuccess{Success: "post deleted"})
 }

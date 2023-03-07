@@ -60,3 +60,9 @@ func ScanPosts(rows *sql.Rows, domain string) (*models.Post, error) {
 	post.Pic = pic
 	return post, err
 }
+
+func ScanPostPic(rows *sql.Rows) (*models.PostPic, error) {
+	post := new(models.PostPic)
+	err := rows.Scan(&post.Pic)
+	return post, err
+}

@@ -75,3 +75,38 @@ func (s *PostgresStore) PostGetBySlug(slug, domain string) (*models.Post, error)
 	}
 	return nil, fmt.Errorf("post %s does not exists", slug)
 }
+
+func (s *PostgresStore) PostDelete(slug string) (*models.PostPic, error) {
+	query1 := `
+	SELECT pic FROM posts
+	WHERE slug = $1
+	`
+	query2 := `
+		DELETE FROM posts
+		WHERE slug = $1
+	`
+	rows, err := s.db.Query(query1, slug)
+	if err != nil {
+		return nil, err
+	}
+	var postPic *models.PostPic
+	for rows.Next() {
+		postPic, err = ScanPostPic(rows)
+		if err != nil {
+			return nil, err
+		}
+	}
+	s.db.Exec("COMMIT")
+	row2, err := s.db.Exec(query2, slug)
+	if err != nil {
+		return nil, err
+	}
+	rows_affected, err := row2.RowsAffected()
+	if err != nil {
+		return nil, err
+	}
+	if rows_affected == 0 {
+		return nil, fmt.Errorf("post %s does not exists", slug)
+	}
+	return postPic, nil
+}
