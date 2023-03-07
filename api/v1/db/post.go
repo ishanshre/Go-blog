@@ -166,7 +166,22 @@ func (s *PostgresStore) PostGetOwner(id int) (*models.PostOwner, error) {
 		return nil, err
 	}
 	for rows.Next() {
-		return ScanOwner(rows)
+		return ScanPostOwner(rows)
 	}
 	return nil, fmt.Errorf("post does not exists")
+}
+
+func (s *PostgresStore) PostExist(post_id int) error {
+	post, err := s.db.Exec(`SELECT id FROM posts WHERE id = $1`, post_id)
+	if err != nil {
+		return err
+	}
+	rows_affected, err := post.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if rows_affected == 0 {
+		return fmt.Errorf("post with id %v does not exists", post_id)
+	}
+	return nil
 }

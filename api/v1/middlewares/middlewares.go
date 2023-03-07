@@ -48,6 +48,15 @@ func GetId(r *http.Request) (int, error) {
 	return id, nil
 }
 
+func GetCommentId(r *http.Request) (int, error) {
+	idstr := mux.Vars(r)["comment_id"]
+	id, err := strconv.Atoi(idstr)
+	if err != nil {
+		return id, fmt.Errorf("error in parsing the url paramater")
+	}
+	return id, nil
+}
+
 func GetSlug(r *http.Request) string {
 	slug := mux.Vars(r)["slug"]
 	return slug

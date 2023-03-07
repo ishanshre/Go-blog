@@ -67,8 +67,28 @@ func ScanPostPic(rows *sql.Rows) (*models.PostPic, error) {
 	return post, err
 }
 
-func ScanOwner(rows *sql.Rows) (*models.PostOwner, error) {
-	post := new(models.PostOwner)
-	err := rows.Scan(&post.User_id)
-	return post, err
+func ScanPostOwner(rows *sql.Rows) (*models.PostOwner, error) {
+	Owner := new(models.PostOwner)
+	err := rows.Scan(&Owner.User_id)
+	return Owner, err
+}
+
+func ScanCommentOwner(rows *sql.Rows) (*models.CommentOwner, error) {
+	owner := new(models.CommentOwner)
+	err := rows.Scan(&owner.User_id)
+	return owner, err
+}
+
+func ScanComment(rows *sql.Rows) (*models.Comment, error) {
+	comment := new(models.Comment)
+	err := rows.Scan(
+		&comment.Id,
+		&comment.Content,
+		&comment.Rating,
+		&comment.Created_at,
+		&comment.Updated_at,
+		&comment.Post_id,
+		&comment.User_id,
+	)
+	return comment, err
 }

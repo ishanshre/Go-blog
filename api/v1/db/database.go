@@ -34,6 +34,14 @@ type Storage interface {
 	PostDelete(int) (*models.PostPic, error)
 	PostUpdate(int, *models.PostUpdate) error
 	PostGetOwner(int) (*models.PostOwner, error)
+	PostExist(int) error
+
+	// Comment Interface
+	CommentCreate(*models.NewComment) error
+	CommentAllByPost(int) ([]*models.Comment, error)
+	CommentUpdate(int, int, *models.CommentUpdate) error
+	CommentDelete(int, int) error
+	CommentOwner(int) (*models.CommentOwner, error)
 }
 
 type PostgresStore struct {

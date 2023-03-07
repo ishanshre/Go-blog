@@ -9,6 +9,6 @@ func postRouter(r *mux.Router, s *ApiServer) {
 	r.HandleFunc("/api/v1/post", middlewares.JwtAuthHandler(middlewares.MakeHttpHandler(s.handlePostCreate), s.store))
 	r.HandleFunc("/api/v1/posts", middlewares.MakeHttpHandler(s.handlePostAll))
 	r.HandleFunc("/api/v1/post/{id}", middlewares.MakeHttpHandler(s.handlePostGetById))
-	r.HandleFunc("/api/v1/post/{id}/delete", middlewares.JwtAuthOwnerPermissionHandler(middlewares.MakeHttpHandler(s.handlePostDeleteById), s.store))
-	r.HandleFunc("/api/v1/post/{id}/update", middlewares.JwtAuthOwnerPermissionHandler(middlewares.MakeHttpHandler(s.handlePostUpdateById), s.store))
+	r.HandleFunc("/api/v1/post/{id}/delete", middlewares.JwtAuthPostOwnerPermissionHandler(middlewares.MakeHttpHandler(s.handlePostDeleteById), s.store))
+	r.HandleFunc("/api/v1/post/{id}/update", middlewares.JwtAuthPostOwnerPermissionHandler(middlewares.MakeHttpHandler(s.handlePostUpdateById), s.store))
 }

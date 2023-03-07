@@ -31,6 +31,7 @@ func (s *ApiServer) Run() {
 	tagRouter(router, s)
 	postRouter(router, s)
 	mediaRouter(router, s)
+	commentRouter(router, s)
 	log.Println("Starting server at port ", s.listenAddr)
 	http.ListenAndServe(s.listenAddr, router)
 }
