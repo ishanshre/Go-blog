@@ -30,6 +30,7 @@ type Storage interface {
 	// Post Interface
 	PostCreate(*models.NewPost) error
 	PostGetAll(int, int, string) ([]*models.Post, error)
+	PostGetBySlug(string, string) (*models.Post, error)
 }
 
 type PostgresStore struct {

@@ -2,7 +2,6 @@ package handlerAndRouters
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/ishanshre/Go-blog/api/v1/middlewares"
@@ -26,7 +25,7 @@ func (s *ApiServer) handleUserSignUp(w http.ResponseWriter, r *http.Request) err
 		}
 		return middlewares.WriteJSON(w, http.StatusCreated, middlewares.ApiSuccess{Success: "user created"})
 	}
-	return fmt.Errorf("%s method not allowed", r.Method)
+	return middlewares.MethodNotAlowed(w, r.Method)
 }
 
 func (s *ApiServer) handleUserLogin(w http.ResponseWriter, r *http.Request) error {
@@ -51,7 +50,7 @@ func (s *ApiServer) handleUserLogin(w http.ResponseWriter, r *http.Request) erro
 		}
 		return middlewares.WriteJSON(w, http.StatusOK, res)
 	}
-	return fmt.Errorf("%s method not allowed", r.Method)
+	return middlewares.MethodNotAlowed(w, r.Method)
 }
 
 func (s *ApiServer) handleUserById(w http.ResponseWriter, r *http.Request) error {
@@ -61,7 +60,7 @@ func (s *ApiServer) handleUserById(w http.ResponseWriter, r *http.Request) error
 	if r.Method == "DELETE" {
 		return s.handleDeleteUserById(w, r)
 	}
-	return fmt.Errorf("%s method not allowed", r.Method)
+	return middlewares.MethodNotAlowed(w, r.Method)
 }
 func (s *ApiServer) handleUserInfoById(w http.ResponseWriter, r *http.Request) error {
 	id, err := middlewares.GetId(r)
@@ -94,7 +93,7 @@ func (s *ApiServer) handleUsersAll(w http.ResponseWriter, r *http.Request) error
 		}
 		return middlewares.WriteJSON(w, http.StatusOK, users)
 	}
-	return fmt.Errorf("%s method not allowed", r.Method)
+	return middlewares.MethodNotAlowed(w, r.Method)
 }
 
 func (s *ApiServer) handleMe(w http.ResponseWriter, r *http.Request) error {
@@ -109,5 +108,5 @@ func (s *ApiServer) handleMe(w http.ResponseWriter, r *http.Request) error {
 		}
 		return middlewares.WriteJSON(w, http.StatusOK, user)
 	}
-	return fmt.Errorf("%s method not allowed", r.Method)
+	return middlewares.MethodNotAlowed(w, r.Method)
 }

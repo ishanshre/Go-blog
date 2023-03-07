@@ -25,6 +25,12 @@ func WriteJSON(w http.ResponseWriter, status int, v any) error {
 	return json.NewEncoder(w).Encode(v)
 }
 
+func MethodNotAlowed(w http.ResponseWriter, method string) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusMethodNotAllowed)
+	return json.NewEncoder(w).Encode(ApiError{Error: fmt.Sprintf("%s method not allowed", method)})
+}
+
 func MakeHttpHandler(f ApiFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if err := f(w, r); err != nil {

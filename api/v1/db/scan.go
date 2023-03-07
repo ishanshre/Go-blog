@@ -44,7 +44,7 @@ func ScanTags(rows *sql.Rows) (*models.Tag, error) {
 	return tag, err
 }
 
-func ScanPosts(rows *sql.Rows, url string) (*models.Post, error) {
+func ScanPosts(rows *sql.Rows, domain string) (*models.Post, error) {
 	post := new(models.Post)
 	err := rows.Scan(
 		&post.Id,
@@ -56,7 +56,7 @@ func ScanPosts(rows *sql.Rows, url string) (*models.Post, error) {
 		&post.Updated_at,
 		&post.User_id,
 	)
-	pic := fmt.Sprintf("%s/media/image/%s", url, post.Pic)
+	pic := fmt.Sprintf("%s/media/image/%s", domain, post.Pic)
 	post.Pic = pic
 	return post, err
 }

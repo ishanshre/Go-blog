@@ -2,7 +2,6 @@ package handlerAndRouters
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/ishanshre/Go-blog/api/v1/middlewares"
@@ -16,7 +15,7 @@ func (s *ApiServer) handleTag(w http.ResponseWriter, r *http.Request) error {
 	if r.Method == "POST" {
 		return s.handleCreateNewTag(w, r)
 	}
-	return fmt.Errorf("%s method not allowed", r.Method)
+	return middlewares.MethodNotAlowed(w, r.Method)
 }
 
 func (s *ApiServer) handleCreateNewTag(w http.ResponseWriter, r *http.Request) error {
@@ -32,15 +31,18 @@ func (s *ApiServer) handleCreateNewTag(w http.ResponseWriter, r *http.Request) e
 }
 
 func (s *ApiServer) handleGetAllTags(w http.ResponseWriter, r *http.Request) error {
-	req := new(models.Page)
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		return err
+	if r.Method == "GET" {
+		req := new(models.Page)
+		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			return err
+		}
+		tags, err := s.store.TagAll(req.Limit, req.Offset)
+		if err != nil {
+			return err
+		}
+		return middlewares.WriteJSON(w, http.StatusOK, tags)
 	}
-	tags, err := s.store.TagAll(req.Limit, req.Offset)
-	if err != nil {
-		return err
-	}
-	return middlewares.WriteJSON(w, http.StatusOK, tags)
+	return middlewares.MethodNotAlowed(w, r.Method)
 }
 
 func (s *ApiServer) handleTagsById(w http.ResponseWriter, r *http.Request) error {
@@ -53,7 +55,7 @@ func (s *ApiServer) handleTagsById(w http.ResponseWriter, r *http.Request) error
 	if r.Method == "DELETE" {
 		return s.handleDeleteTags(w, r)
 	}
-	return fmt.Errorf("%s method not allowed", r.Method)
+	return middlewares.MethodNotAlowed(w, r.Method)
 }
 
 func (s *ApiServer) handleDeleteTags(w http.ResponseWriter, r *http.Request) error {

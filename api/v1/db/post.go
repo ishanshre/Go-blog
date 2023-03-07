@@ -41,7 +41,7 @@ func (s *PostgresStore) PostCreate(post *models.NewPost) error {
 	return nil
 }
 
-func (s *PostgresStore) PostGetAll(limit, offset int, url string) ([]*models.Post, error) {
+func (s *PostgresStore) PostGetAll(limit, offset int, domain string) ([]*models.Post, error) {
 	query := `
 		SELECT * FROM posts
 		LIMIT $1 OFFSET $2
@@ -52,11 +52,26 @@ func (s *PostgresStore) PostGetAll(limit, offset int, url string) ([]*models.Pos
 		return nil, err
 	}
 	for rows.Next() {
-		post, err := ScanPosts(rows, url)
+		post, err := ScanPosts(rows, domain)
 		if err != nil {
 			return nil, err
 		}
 		posts = append(posts, post)
 	}
 	return posts, nil
+}
+
+func (s *PostgresStore) PostGetBySlug(slug, domain string) (*models.Post, error) {
+	query := `
+		SELECT * FROM posts
+		WHERE slug = $1
+	`
+	rows, err := s.db.Query(query, slug)
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		return ScanPosts(rows, domain)
+	}
+	return nil, fmt.Errorf("post %s does not exists", slug)
 }
