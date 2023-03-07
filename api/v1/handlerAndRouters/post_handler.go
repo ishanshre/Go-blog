@@ -1,6 +1,8 @@
 package handlerAndRouters
 
 import (
+	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -27,4 +29,20 @@ func (s *ApiServer) handlePostCreate(w http.ResponseWriter, r *http.Request) err
 		return err
 	}
 	return middlewares.WriteJSON(w, http.StatusCreated, post)
+}
+
+func (s *ApiServer) handlePostAll(w http.ResponseWriter, r *http.Request) error {
+	page := new(models.Page)
+	if err := json.NewDecoder(r.Body).Decode(&page); err != nil {
+		return err
+	}
+	log.Println(r.Host)
+	log.Println(r.URL.Scheme)
+	protocol := utils.CheckHttpProtocol(r)
+	domain := fmt.Sprintf("%s://%s", protocol, r.Host)
+	posts, err := s.store.PostGetAll(page.Limit, page.Offset, domain)
+	if err != nil {
+		return err
+	}
+	return middlewares.WriteJSON(w, http.StatusOK, posts)
 }

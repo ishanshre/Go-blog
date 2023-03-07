@@ -2,6 +2,7 @@ package db
 
 import (
 	"database/sql"
+	"fmt"
 
 	"github.com/ishanshre/Go-blog/api/v1/models"
 )
@@ -41,4 +42,21 @@ func ScanTags(rows *sql.Rows) (*models.Tag, error) {
 		&tag.UpdatedAt,
 	)
 	return tag, err
+}
+
+func ScanPosts(rows *sql.Rows, url string) (*models.Post, error) {
+	post := new(models.Post)
+	err := rows.Scan(
+		&post.Id,
+		&post.Title,
+		&post.Slug,
+		&post.Pic,
+		&post.Content,
+		&post.Created_at,
+		&post.Updated_at,
+		&post.User_id,
+	)
+	pic := fmt.Sprintf("%s/media/image/%s", url, post.Pic)
+	post.Pic = pic
+	return post, err
 }

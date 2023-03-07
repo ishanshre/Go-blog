@@ -40,3 +40,23 @@ func (s *PostgresStore) PostCreate(post *models.NewPost) error {
 	}
 	return nil
 }
+
+func (s *PostgresStore) PostGetAll(limit, offset int, url string) ([]*models.Post, error) {
+	query := `
+		SELECT * FROM posts
+		LIMIT $1 OFFSET $2
+	`
+	posts := []*models.Post{}
+	rows, err := s.db.Query(query, limit, offset)
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		post, err := ScanPosts(rows, url)
+		if err != nil {
+			return nil, err
+		}
+		posts = append(posts, post)
+	}
+	return posts, nil
+}
