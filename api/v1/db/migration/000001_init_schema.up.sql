@@ -14,12 +14,13 @@ CREATE TABLE "users" (
 CREATE TABLE "posts" (
     id SERIAL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
+    slug VARCHAR(255),
     pic VARCHAR(255),
     content VARCHAR(10000),
     created_at TIMESTAMPTZ,
     updated_at TIMESTAMPTZ,
     user_id INTEGER,
-    FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
 CREATE TABLE "tags" (

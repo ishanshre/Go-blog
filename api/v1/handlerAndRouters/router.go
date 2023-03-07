@@ -29,6 +29,7 @@ func (s *ApiServer) Run() {
 	router := NewRouter()
 	userRouter(router, s)
 	tagRouter(router, s)
+	postRouter(router, s)
 	log.Println("Starting server at port ", s.listenAddr)
 	http.ListenAndServe(s.listenAddr, router)
 }

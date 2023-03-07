@@ -26,6 +26,9 @@ type Storage interface {
 	TagDelete(int) error
 	TagUpdate(int, *models.CreateTagRequest) error
 	TagByID(int) (*models.Tag, error)
+
+	// Post Interface
+	PostCreate(*models.NewPost) error
 }
 
 type PostgresStore struct {
