@@ -26,6 +26,7 @@ type Storage interface {
 	TagDelete(int) error
 	TagUpdate(int, *models.CreateTagRequest) error
 	TagByID(int) (*models.Tag, error)
+	TagExist(int) error
 
 	// Post Interface
 	PostCreate(*models.NewPost) error
@@ -35,6 +36,9 @@ type Storage interface {
 	PostUpdate(int, *models.PostUpdate) error
 	PostGetOwner(int) (*models.PostOwner, error)
 	PostExist(int) error
+	PostTagAdd(int, int) error
+	PostTagDelete(int, int) error
+	PostTagsAll(post_id, limit, offset int) ([]*models.TagPost, error)
 
 	// Comment Interface
 	CommentCreate(*models.NewComment) error
@@ -49,6 +53,7 @@ type PostgresStore struct {
 }
 
 func NewPostgresStore() (*PostgresStore, error) {
+	// create, connect, ping database and returns database
 	if err := godotenv.Load("./.env"); err != nil {
 		return nil, fmt.Errorf("error in loading environment files: %s", err)
 	}

@@ -15,6 +15,7 @@ import (
 )
 
 func (s *ApiServer) handlePostCreate(w http.ResponseWriter, r *http.Request) error {
+	// create a new post by auth user
 	if r.Method == "POST" {
 		filename, err := utils.UploadPostImage(r)
 		if err != nil {
@@ -38,6 +39,7 @@ func (s *ApiServer) handlePostCreate(w http.ResponseWriter, r *http.Request) err
 }
 
 func (s *ApiServer) handlePostAll(w http.ResponseWriter, r *http.Request) error {
+	// handler for retreive all post with page
 	if r.Method == "GET" {
 		page := new(models.Page)
 		if err := json.NewDecoder(r.Body).Decode(&page); err != nil {
@@ -55,6 +57,7 @@ func (s *ApiServer) handlePostAll(w http.ResponseWriter, r *http.Request) error 
 }
 
 func (s *ApiServer) handlePostGetById(w http.ResponseWriter, r *http.Request) error {
+	// handler for specifc post by id
 	if r.Method == "GET" {
 		id, err := middlewares.GetId(r)
 		if err != nil {
@@ -72,6 +75,7 @@ func (s *ApiServer) handlePostGetById(w http.ResponseWriter, r *http.Request) er
 }
 
 func (s *ApiServer) handlePostDeleteById(w http.ResponseWriter, r *http.Request) error {
+	// handler for deleting post by its auth owner
 	if r.Method == "DELETE" {
 		id, err := middlewares.GetId(r)
 		if err != nil {
@@ -91,6 +95,7 @@ func (s *ApiServer) handlePostDeleteById(w http.ResponseWriter, r *http.Request)
 }
 
 func (s *ApiServer) handlePostUpdateById(w http.ResponseWriter, r *http.Request) error {
+	// handler for post update by its auth owner
 	if r.Method == "PUT" {
 		id, err := middlewares.GetId(r)
 		if err != nil {
@@ -109,6 +114,68 @@ func (s *ApiServer) handlePostUpdateById(w http.ResponseWriter, r *http.Request)
 			return err
 		}
 		return middlewares.WriteJSON(w, http.StatusOK, middlewares.ApiSuccess{Success: "post updated"})
+	}
+	return middlewares.MethodNotAlowed(w, r.Method)
+}
+
+func (s *ApiServer) handlePostTagAddDelete(w http.ResponseWriter, r *http.Request) error {
+	if r.Method == "POST" {
+		return s.handlePostTagAdd(w, r)
+	}
+	if r.Method == "DELETE" {
+		return s.handlePostTagDelete(w, r)
+	}
+	return middlewares.MethodNotAlowed(w, r.Method)
+}
+
+func (s *ApiServer) handlePostTagAdd(w http.ResponseWriter, r *http.Request) error {
+	// handler for adding tag to post by post owner
+	post_id, err := middlewares.GetId(r)
+	if err != nil {
+		return err
+	}
+	req := new(models.TagReq)
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		return err
+	}
+	if err := s.store.PostTagAdd(post_id, req.ID); err != nil {
+		return err
+	}
+	return middlewares.WriteJSON(w, http.StatusCreated, middlewares.ApiSuccess{Success: "tag added in post"})
+}
+
+func (s *ApiServer) handlePostTagDelete(w http.ResponseWriter, r *http.Request) error {
+	// handler for removing tag from post by post owner
+	post_id, err := middlewares.GetId(r)
+	if err != nil {
+		return err
+	}
+	req := new(models.TagReq)
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		return err
+	}
+	if err := s.store.PostTagDelete(post_id, req.ID); err != nil {
+		return err
+	}
+	return middlewares.WriteJSON(w, http.StatusCreated, middlewares.ApiSuccess{Success: "tag deleted from post"})
+}
+
+func (s *ApiServer) handlePostTagsAll(w http.ResponseWriter, r *http.Request) error {
+	// handler for displaying all tags added to post
+	if r.Method == "GET" {
+		post_id, err := middlewares.GetId(r)
+		if err != nil {
+			return err
+		}
+		req := new(models.Page)
+		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			return err
+		}
+		tags, err := s.store.PostTagsAll(post_id, req.Limit, req.Offset)
+		if err != nil {
+			return err
+		}
+		return middlewares.WriteJSON(w, http.StatusOK, tags)
 	}
 	return middlewares.MethodNotAlowed(w, r.Method)
 }

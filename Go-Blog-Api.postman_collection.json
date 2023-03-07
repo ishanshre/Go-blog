@@ -1,0 +1,828 @@
+{
+	"info": {
+		"_postman_id": "3ff833a7-23ec-419f-b069-a2c7246632dc",
+		"name": "Go-Blog-Api",
+		"description": "Collection of Blog API endpoints written in golang",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23408505"
+	},
+	"item": [
+		{
+			"name": "Posts",
+			"item": [
+				{
+					"name": "All Posts",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"limit\":10,\n    \"offset\":0\n}"
+						},
+						"url": {
+							"raw": "127.0.0.1:8000/api/v1/posts",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"posts"
+							]
+						},
+						"description": "Get all post without user auth and need to provide limit and offset"
+					},
+					"response": []
+				},
+				{
+					"name": "Post",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "127.0.0.1:8000/api/v1/post/15",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"post",
+								"15"
+							]
+						},
+						"description": "- Returns a post by id\n- Any one can view post"
+					},
+					"response": []
+				},
+				{
+					"name": "New Post",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJFeHBpcmVzQXQiOjE2NzgxODc3MjEsIklzc3VlZEF0IjoxNjc4MTg2ODIxLCJ1c2VyX2lkIjoyfQ._1v64fKVhf4WY54_aee_qo33GkLz7p_A_hUeifvuWOw",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/home/ishan/Pictures/11.jpg"
+								},
+								{
+									"key": "title",
+									"value": "This is a title 1",
+									"contentType": "Auto",
+									"type": "text"
+								},
+								{
+									"key": "content",
+									"value": "This is a content",
+									"contentType": "text/plain",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "127.0.0.1:8000/api/v1/post",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"post"
+							]
+						},
+						"description": "Create a new blog post by only auth user"
+					},
+					"response": []
+				},
+				{
+					"name": "Update post",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJFeHBpcmVzQXQiOjE2NzgxODc5MDcsIklzc3VlZEF0IjoxNjc4MTg3MDA3LCJ1c2VyX2lkIjoyfQ.j6JsPRGT320tLfgTGVQV_wL2pUYOueaibQWV2UPEurU",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/home/ishan/Pictures/wallpaperflare.com_wallpaper (9).jpg"
+								},
+								{
+									"key": "title",
+									"value": "Hello to post update",
+									"type": "text"
+								},
+								{
+									"key": "content",
+									"value": "hello this is new post content for id 17",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "127.0.0.1:8000/api/v1/post/19/update",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"post",
+								"19",
+								"update"
+							]
+						},
+						"description": "- Update post by ID\n- Only Authenticated Owner can update post"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Post",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "127.0.0.1:8000/api/v1/post/18/delete",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"post",
+								"18",
+								"delete"
+							]
+						},
+						"description": "- Delete post by ID\n- Only Authenticated Owner can delete post"
+					},
+					"response": []
+				},
+				{
+					"name": "Add tag to posts",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJFeHBpcmVzQXQiOjE2NzgyMDQ2MjEsIklzc3VlZEF0IjoxNjc4MjAzNzIxLCJ1c2VyX2lkIjoyfQ.M_8v-nTL2KEPitGKrKcesHU6HEM_uDn7ubsICl69ytU",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\":2\n}"
+						},
+						"url": {
+							"raw": "127.0.0.1:8000/api/v1/post/19/tag",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"post",
+								"19",
+								"tag"
+							]
+						},
+						"description": "Add tag to the post by authentcated owner only"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete tag from post",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJFeHBpcmVzQXQiOjE2NzgyMDQ2MjEsIklzc3VlZEF0IjoxNjc4MjAzNzIxLCJ1c2VyX2lkIjoyfQ.M_8v-nTL2KEPitGKrKcesHU6HEM_uDn7ubsICl69ytU",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\":1\n}"
+						},
+						"url": {
+							"raw": "127.0.0.1:8000/api/v1/post/19/tag",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"post",
+								"19",
+								"tag"
+							]
+						},
+						"description": "Delete tag from a post by authenticated owner"
+					},
+					"response": []
+				},
+				{
+					"name": "All tags add to post",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"limit\":10,\n    \"offset\":0\n}"
+						},
+						"url": {
+							"raw": "127.0.0.1:8000/api/v1/post/19/tags",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"post",
+								"19",
+								"tags"
+							]
+						},
+						"description": "Returns all tags add to post"
+					},
+					"response": []
+				}
+			],
+			"description": "Posts API endpoints"
+		},
+		{
+			"name": "Tags",
+			"item": [
+				{
+					"name": "Get all tags",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJFeHBpcmVzQXQiOjE2NzgwOTMzNjksIklzc3VlZEF0IjoxNjc4MDkyNDY5LCJ1c2VyX2lkIjoxfQ.WWEC9AgSagwFk94h6j2EWmiBdyXrMDuZWfRDJpg-XqU",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"limit\":10,\n    \"offset\":0\n}"
+						},
+						"url": {
+							"raw": "127.0.0.1:8000/api/v1/tags",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"tags"
+							]
+						},
+						"description": "Body : {  \n\"limit\":10,  \n\"offset\":0  \n}"
+					},
+					"response": []
+				},
+				{
+					"name": "Get tag by id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJFeHBpcmVzQXQiOjE2NzgwOTMzNjksIklzc3VlZEF0IjoxNjc4MDkyNDY5LCJ1c2VyX2lkIjoxfQ.WWEC9AgSagwFk94h6j2EWmiBdyXrMDuZWfRDJpg-XqU",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "127.0.0.1:8000/api/v1/tag/2",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"tag",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create New Tag",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJFeHBpcmVzQXQiOjE2NzgwOTMzNjksIklzc3VlZEF0IjoxNjc4MDkyNDY5LCJ1c2VyX2lkIjoxfQ.WWEC9AgSagwFk94h6j2EWmiBdyXrMDuZWfRDJpg-XqU",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\":\"python\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "127.0.0.1:8000/api/v1/tags",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"tags"
+							]
+						},
+						"description": "Body: {\n    \"name\":\"tagName\"\n}"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete tag by id",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJFeHBpcmVzQXQiOjE2NzgwOTMzNjksIklzc3VlZEF0IjoxNjc4MDkyNDY5LCJ1c2VyX2lkIjoxfQ.WWEC9AgSagwFk94h6j2EWmiBdyXrMDuZWfRDJpg-XqU",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "127.0.0.1:8000/api/v1/tag/1",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"tag",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update tag by id",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJFeHBpcmVzQXQiOjE2NzgwOTMzNjksIklzc3VlZEF0IjoxNjc4MDkyNDY5LCJ1c2VyX2lkIjoxfQ.WWEC9AgSagwFk94h6j2EWmiBdyXrMDuZWfRDJpg-XqU",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\":\"djangorestframework\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "127.0.0.1:8000/api/v1/tag/2",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"tag",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User Auth",
+			"item": [
+				{
+					"name": "SignUp",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"first_name\":\"test\",\n    \"last_name\":\"testing\",\n    \"username\":\"test\",\n    \"email\":\"test@gmail.com\",\n    \"password\":\"test\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "127.0.0.1:8000/api/v1/auth/signup",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"signup"
+							]
+						},
+						"description": "New User Register\nexample:-\nBody : {\n    \"first_name\":\"hello\",\n    \"last_name\":\"world\",\n    \"username\":\"hello\",\n    \"password\":\"hello\"\n}"
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\":\"test\",\n    \"password\":\"test\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "127.0.0.1:8000/api/v1/auth/login",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						},
+						"description": "User Login\nexpample:-\nBody : {\n    \"username\":\"hello\",\n    \"password\":\"hello\"\n}"
+					},
+					"response": []
+				},
+				{
+					"name": "Me",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJFeHBpcmVzQXQiOjE2NzgxMDQ2NzksIklzc3VlZEF0IjoxNjc4MTAzNzc5LCJ1c2VyX2lkIjoxfQ.8YXkjDaU3HeLvmErYhCSoEa0srKlH-jg_3iKxob_Z90",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "127.0.0.1:8000/api/v1/auth/me",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"me"
+							]
+						},
+						"description": "Get current logged in user profile\nHeader : {\n    \"Authorization\":\"Bearer jwt token\"\n}"
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Users",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJFeHBpcmVzQXQiOjE2NzgwODQxNTIsIklzc3VlZEF0IjoxNjc4MDgzMjUyLCJ1c2VyX2lkIjoyfQ.MhQVa4dc5NeLYYvyZ56VZiLo4l3JzW8xMt1y2K2yCII",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "127.0.0.1:8000/api/v1/auth/users",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"users"
+							]
+						},
+						"description": "Need user to be admin"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete logged in user",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJFeHBpcmVzQXQiOjE2NzgwODYzMjQsIklzc3VlZEF0IjoxNjc4MDg1NDI0LCJ1c2VyX2lkIjozfQ.czKCuKigAP56oRn72p9LWKkRnLs1zRS5zT5uPa5BXWY",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "127.0.0.1:8000/api/v1/auth/user/3",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"user",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get logged in user profile by id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJFeHBpcmVzQXQiOjE2NzgwODYzMjQsIklzc3VlZEF0IjoxNjc4MDg1NDI0LCJ1c2VyX2lkIjozfQ.czKCuKigAP56oRn72p9LWKkRnLs1zRS5zT5uPa5BXWY",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "127.0.0.1:8000/api/v1/auth/user/3",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"user",
+								"3"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Full stack user authentication api with JWT"
+		},
+		{
+			"name": "Comment",
+			"item": [
+				{
+					"name": "Create Comment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJFeHBpcmVzQXQiOjE2NzgxOTA4MjMsIklzc3VlZEF0IjoxNjc4MTg5OTIzLCJ1c2VyX2lkIjoyfQ.NAXHjnmEFB2AAW__V5gFRu79dvHJp7GGG2wAW04D6T0",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"content\":\"This is a comment\",\n    \"rating\":1\n}"
+						},
+						"url": {
+							"raw": "127.0.0.1:8000/api/v1/post/19/comment",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"post",
+								"19",
+								"comment"
+							]
+						},
+						"description": "- Auth user can create a comment in an existing post"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Comments",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "127.0.0.1:8000/api/v1/post/19/comments",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"post",
+								"19",
+								"comments"
+							]
+						},
+						"description": "Get all Comments by post "
+					},
+					"response": []
+				},
+				{
+					"name": "Update Comment",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJFeHBpcmVzQXQiOjE2NzgyMDIzNDUsIklzc3VlZEF0IjoxNjc4MjAxNDQ1LCJ1c2VyX2lkIjoyfQ.kKZwwHs-cSeVlwub72QtWXV2hP7bdhjWcf4oHKBn4bU",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"content\":\"This is the updated comments 1111\",\n    \"rating\": 2\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "127.0.0.1:8000/api/v1/post/19/comment/2",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"post",
+								"19",
+								"comment",
+								"2"
+							]
+						},
+						"description": "Only Authenticated Owner can update comment and also post must exists"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Comments",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJFeHBpcmVzQXQiOjE2NzgyMDIzNDUsIklzc3VlZEF0IjoxNjc4MjAxNDQ1LCJ1c2VyX2lkIjoyfQ.kKZwwHs-cSeVlwub72QtWXV2hP7bdhjWcf4oHKBn4bU",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "127.0.0.1:8000/api/v1/post/19/comment/2",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"post",
+								"19",
+								"comment",
+								"2"
+							]
+						},
+						"description": "Only Authorized Owner can delete comment "
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

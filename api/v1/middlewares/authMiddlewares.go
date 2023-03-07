@@ -9,19 +9,22 @@ import (
 )
 
 func JwtAuthHandler(handlerFunc http.HandlerFunc, s db.Storage) http.HandlerFunc {
+	// middleware that checks for auth user.
+	// if user if not authenticated, they are unable to access endpoint
 	return func(w http.ResponseWriter, r *http.Request) {
-		userId, err := utils.ExractTokenMetaData(r)
+		userId, err := utils.ExractTokenMetaData(r) // extact id from token
+		if err != nil {
+			log.Println(err)
+			permissionDenied(w) // if token is invalid or no token return err
+			return
+		}
+		account, err := s.UserInfoById(userId.ID) // if checks id is real and returns account
 		if err != nil {
 			log.Println(err)
 			permissionDenied(w)
 			return
 		}
-		account, err := s.UserInfoById(userId.ID)
-		if err != nil {
-			log.Println(err)
-			permissionDenied(w)
-			return
-		}
+		// verify user
 		if err := utils.VerifyUser(account.ID, r); err != nil {
 			log.Println(err)
 			permissionDenied(w)
@@ -32,6 +35,7 @@ func JwtAuthHandler(handlerFunc http.HandlerFunc, s db.Storage) http.HandlerFunc
 }
 
 func JwtAuthPermissionHandler(handlerFunc http.HandlerFunc, s db.Storage) http.HandlerFunc {
+	// checks if the user id paramater is equal to token user id for updating and deleting user
 	return func(w http.ResponseWriter, r *http.Request) {
 		userId, err := utils.ExractTokenMetaData(r)
 		if err != nil {
@@ -66,6 +70,7 @@ func JwtAuthPermissionHandler(handlerFunc http.HandlerFunc, s db.Storage) http.H
 }
 
 func JwtAuthPostOwnerPermissionHandler(handlerFunc http.HandlerFunc, s db.Storage) http.HandlerFunc {
+	// middleware for auth user as well as owner of the post
 	return func(w http.ResponseWriter, r *http.Request) {
 		userId, err := utils.ExractTokenMetaData(r)
 		if err != nil {
@@ -105,6 +110,7 @@ func JwtAuthPostOwnerPermissionHandler(handlerFunc http.HandlerFunc, s db.Storag
 }
 
 func JwtAuthCommentOwnerPermissionHandler(handlerFunc http.HandlerFunc, s db.Storage) http.HandlerFunc {
+	// middleware that checks for auth user and comment owner
 	return func(w http.ResponseWriter, r *http.Request) {
 		userId, err := utils.ExractTokenMetaData(r)
 		if err != nil {
@@ -144,6 +150,7 @@ func JwtAuthCommentOwnerPermissionHandler(handlerFunc http.HandlerFunc, s db.Sto
 }
 
 func JwtAuthAdminHandler(handlerFunc http.HandlerFunc, s db.Storage) http.HandlerFunc {
+	// middleware for auth admin user
 	return func(w http.ResponseWriter, r *http.Request) {
 		userId, err := utils.ExractTokenMetaData(r)
 		if err != nil {

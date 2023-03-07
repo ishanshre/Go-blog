@@ -8,11 +8,10 @@ import (
 )
 
 func main() {
-	store, err := db.NewPostgresStore()
+	store, err := db.NewPostgresStore() // connect to databse and returns if everything is ok
 	if err != nil {
-		log.Fatalln(err)
+		log.Fatalln(err) // logs an error that occurs when connecting to database
 	}
-	server := handlerAndRouters.NewApiServer(":8000", store)
-	server.Run()
-
+	server := handlerAndRouters.NewApiServer(":8000", store) // create server
+	server.Run()                                             // run server
 }

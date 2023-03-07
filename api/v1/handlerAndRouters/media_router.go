@@ -6,5 +6,6 @@ import (
 )
 
 func mediaRouter(r *mux.Router, s *ApiServer) {
+	// router for media files
 	r.HandleFunc("/media/image/{filename}", middlewares.MakeHttpHandler(s.handleMediaImage))
 }

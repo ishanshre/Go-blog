@@ -10,6 +10,7 @@ import (
 )
 
 func (s *ApiServer) handleCommentCreate(w http.ResponseWriter, r *http.Request) error {
+	// create new comment for a specific post
 	if r.Method == "POST" {
 		req := new(models.CommentReq)
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
@@ -34,6 +35,7 @@ func (s *ApiServer) handleCommentCreate(w http.ResponseWriter, r *http.Request) 
 }
 
 func (s *ApiServer) handleCommentByPost(w http.ResponseWriter, r *http.Request) error {
+	// handler for comment by id
 	if r.Method == "GET" {
 		post_id, err := middlewares.GetId(r)
 		if err != nil {
@@ -49,6 +51,7 @@ func (s *ApiServer) handleCommentByPost(w http.ResponseWriter, r *http.Request) 
 }
 
 func (s *ApiServer) handleCommentUpdateDelete(w http.ResponseWriter, r *http.Request) error {
+	// handler for updating and deleting comment by owner
 	if r.Method == "PUT" {
 		return s.handleCommentUpdate(w, r)
 	}
@@ -59,6 +62,7 @@ func (s *ApiServer) handleCommentUpdateDelete(w http.ResponseWriter, r *http.Req
 }
 
 func (s *ApiServer) handleCommentUpdate(w http.ResponseWriter, r *http.Request) error {
+	// handler for updating comment by comment owner
 	post_id, err := middlewares.GetId(r)
 	if err != nil {
 		return err
@@ -79,6 +83,7 @@ func (s *ApiServer) handleCommentUpdate(w http.ResponseWriter, r *http.Request) 
 }
 
 func (s *ApiServer) handleCommentDelete(w http.ResponseWriter, r *http.Request) error {
+	// handler comment delete by comment owner
 	post_id, err := middlewares.GetId(r)
 	if err != nil {
 		return err

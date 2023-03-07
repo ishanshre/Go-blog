@@ -13,6 +13,15 @@ type CreateTagRequest struct {
 	Name string `json:"name"`
 }
 
+type TagReq struct {
+	ID int `json:"id"`
+}
+
+type TagPost struct {
+	Post_id int `json:"post_id"`
+	Tag_id  int `json:"tag_id"`
+}
+
 func CreateNewTag(name string) *Tag {
 	return &Tag{
 		Name:      name,

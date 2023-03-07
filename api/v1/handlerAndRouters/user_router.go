@@ -6,6 +6,7 @@ import (
 )
 
 func userRouter(r *mux.Router, s *ApiServer) {
+	// router for users
 	r.HandleFunc("/api/v1/auth/signup", middlewares.MakeHttpHandler(s.handleUserSignUp))
 	r.HandleFunc("/api/v1/auth/login", middlewares.MakeHttpHandler(s.handleUserLogin))
 	r.HandleFunc("/api/v1/auth/user/{id}", middlewares.JwtAuthPermissionHandler(middlewares.MakeHttpHandler(s.handleUserById), s.store))

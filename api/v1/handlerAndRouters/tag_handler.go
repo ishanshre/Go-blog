@@ -9,6 +9,7 @@ import (
 )
 
 func (s *ApiServer) handleTag(w http.ResponseWriter, r *http.Request) error {
+	//handler for reteriving all tags and creating tags
 	if r.Method == "GET" {
 		return s.handleGetAllTags(w, r)
 	}
@@ -19,6 +20,7 @@ func (s *ApiServer) handleTag(w http.ResponseWriter, r *http.Request) error {
 }
 
 func (s *ApiServer) handleCreateNewTag(w http.ResponseWriter, r *http.Request) error {
+	// handler for new tag by admin
 	req := new(models.CreateTagRequest)
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		return err
@@ -31,6 +33,7 @@ func (s *ApiServer) handleCreateNewTag(w http.ResponseWriter, r *http.Request) e
 }
 
 func (s *ApiServer) handleGetAllTags(w http.ResponseWriter, r *http.Request) error {
+	// handler for reteriving all tags
 	if r.Method == "GET" {
 		req := new(models.Page)
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
@@ -46,6 +49,7 @@ func (s *ApiServer) handleGetAllTags(w http.ResponseWriter, r *http.Request) err
 }
 
 func (s *ApiServer) handleTagsById(w http.ResponseWriter, r *http.Request) error {
+	// handler for fetching tag by id
 	if r.Method == "GET" {
 		return s.handleGetTagsById(w, r)
 	}
@@ -59,6 +63,7 @@ func (s *ApiServer) handleTagsById(w http.ResponseWriter, r *http.Request) error
 }
 
 func (s *ApiServer) handleDeleteTags(w http.ResponseWriter, r *http.Request) error {
+	// handler for deleting tag
 	id, err := middlewares.GetId(r)
 	if err != nil {
 		return err
@@ -70,6 +75,7 @@ func (s *ApiServer) handleDeleteTags(w http.ResponseWriter, r *http.Request) err
 }
 
 func (s *ApiServer) handleUpdateTags(w http.ResponseWriter, r *http.Request) error {
+	// handler for updating tag
 	id, err := middlewares.GetId(r)
 	if err != nil {
 		return err
@@ -85,6 +91,7 @@ func (s *ApiServer) handleUpdateTags(w http.ResponseWriter, r *http.Request) err
 }
 
 func (s *ApiServer) handleGetTagsById(w http.ResponseWriter, r *http.Request) error {
+	// handler for reteriving tag by id
 	id, err := middlewares.GetId(r)
 	if err != nil {
 		return err

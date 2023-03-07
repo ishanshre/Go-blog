@@ -6,6 +6,7 @@ import (
 )
 
 func commentRouter(r *mux.Router, s *ApiServer) {
+	// comment router
 	r.HandleFunc("/api/v1/post/{id}/comment", middlewares.JwtAuthHandler(middlewares.MakeHttpHandler(s.handleCommentCreate), s.store))
 	r.HandleFunc("/api/v1/post/{id}/comments", middlewares.MakeHttpHandler(s.handleCommentByPost))
 	r.HandleFunc("/api/v1/post/{id}/comment/{comment_id}", middlewares.JwtAuthCommentOwnerPermissionHandler(middlewares.MakeHttpHandler(s.handleCommentUpdateDelete), s.store))

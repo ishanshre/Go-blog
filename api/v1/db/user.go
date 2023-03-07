@@ -8,6 +8,7 @@ import (
 )
 
 func (s *PostgresStore) UserSignUp(user *models.RegsiterUser) error {
+	// register new user
 	query := `
 		INSERT INTO users (
 			first_name,
@@ -47,6 +48,7 @@ func (s *PostgresStore) UserSignUp(user *models.RegsiterUser) error {
 }
 
 func (s *PostgresStore) UserLogin(username string) (*models.UserPass, error) {
+	// return id and password
 	query := `
 		SELECT id, password FROM users
 		WHERE username = $1
@@ -62,6 +64,7 @@ func (s *PostgresStore) UserLogin(username string) (*models.UserPass, error) {
 }
 
 func (s *PostgresStore) UpdateLastLogin(id int) error {
+	// update login date
 	query := `
 		UPDATE users
 		SET last_login = $2
@@ -73,6 +76,7 @@ func (s *PostgresStore) UpdateLastLogin(id int) error {
 }
 
 func (s *PostgresStore) UserInfoById(id int) (*models.User, error) {
+	// return user info by id
 	query := `
 		SELECT * FROM users
 		WHERE id = $1
@@ -88,6 +92,7 @@ func (s *PostgresStore) UserInfoById(id int) (*models.User, error) {
 }
 
 func (s *PostgresStore) UsersAll() ([]*models.User, error) {
+	// returns all user registered
 	query := `
 		SELECT * FROM users
 	`
@@ -109,6 +114,7 @@ func (s *PostgresStore) UsersAll() ([]*models.User, error) {
 }
 
 func (s *PostgresStore) UserDelete(id int) error {
+	// delete user account
 	query := `
 		DELETE FROM users
 		WHERE id = $1

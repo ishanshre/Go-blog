@@ -26,6 +26,7 @@ func NewRouter() *mux.Router {
 }
 
 func (s *ApiServer) Run() {
+	// initializing new gorilla mux router and running golang server
 	router := NewRouter()
 	userRouter(router, s)
 	tagRouter(router, s)

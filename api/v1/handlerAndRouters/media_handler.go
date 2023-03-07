@@ -9,6 +9,7 @@ import (
 )
 
 func (s *ApiServer) handleMediaImage(w http.ResponseWriter, r *http.Request) error {
+	// handler for serving post picture
 	filename := mux.Vars(r)["filename"]
 	media_url := "./media/uploads/posts/"
 	path := fmt.Sprintf("%s%s", media_url, filename)

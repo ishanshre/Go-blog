@@ -10,6 +10,7 @@ import (
 )
 
 func (s *ApiServer) handleUserSignUp(w http.ResponseWriter, r *http.Request) error {
+	// hadner for user registration
 	if r.Method == "POST" {
 		req := new(models.RegisterUserRequest)
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
@@ -29,6 +30,7 @@ func (s *ApiServer) handleUserSignUp(w http.ResponseWriter, r *http.Request) err
 }
 
 func (s *ApiServer) handleUserLogin(w http.ResponseWriter, r *http.Request) error {
+	// handler for login process
 	if r.Method == "POST" {
 		req := new(models.LoginRequest)
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
@@ -54,6 +56,7 @@ func (s *ApiServer) handleUserLogin(w http.ResponseWriter, r *http.Request) erro
 }
 
 func (s *ApiServer) handleUserById(w http.ResponseWriter, r *http.Request) error {
+	// handler for  user account by id
 	if r.Method == "GET" {
 		return s.handleUserInfoById(w, r)
 	}
@@ -63,6 +66,7 @@ func (s *ApiServer) handleUserById(w http.ResponseWriter, r *http.Request) error
 	return middlewares.MethodNotAlowed(w, r.Method)
 }
 func (s *ApiServer) handleUserInfoById(w http.ResponseWriter, r *http.Request) error {
+	// handler for reteriving user info by id
 	id, err := middlewares.GetId(r)
 	if err != nil {
 		return err
@@ -75,6 +79,7 @@ func (s *ApiServer) handleUserInfoById(w http.ResponseWriter, r *http.Request) e
 }
 
 func (s *ApiServer) handleDeleteUserById(w http.ResponseWriter, r *http.Request) error {
+	// handler for deleting user by id
 	id, err := middlewares.GetId(r)
 	if err != nil {
 		return err
@@ -86,6 +91,7 @@ func (s *ApiServer) handleDeleteUserById(w http.ResponseWriter, r *http.Request)
 }
 
 func (s *ApiServer) handleUsersAll(w http.ResponseWriter, r *http.Request) error {
+	// handler for getting all users
 	if r.Method == "GET" {
 		users, err := s.store.UsersAll()
 		if err != nil {
@@ -97,6 +103,7 @@ func (s *ApiServer) handleUsersAll(w http.ResponseWriter, r *http.Request) error
 }
 
 func (s *ApiServer) handleMe(w http.ResponseWriter, r *http.Request) error {
+	// handler for reteriving profile
 	if r.Method == "GET" {
 		userData, err := utils.ExractTokenMetaData(r)
 		if err != nil {

@@ -6,6 +6,7 @@ import (
 )
 
 func tagRouter(r *mux.Router, s *ApiServer) {
+	// router for tag
 	r.HandleFunc("/api/v1/tags", middlewares.JwtAuthHandler(middlewares.MakeHttpHandler(s.handleTag), s.store))
 	r.HandleFunc("/api/v1/tag/{id}", middlewares.JwtAuthAdminHandler(middlewares.MakeHttpHandler(s.handleTagsById), s.store))
 }

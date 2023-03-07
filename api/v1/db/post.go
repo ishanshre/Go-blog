@@ -8,6 +8,7 @@ import (
 )
 
 func (s *PostgresStore) PostCreate(post *models.NewPost) error {
+	// create new post by authenticated user
 	query := `
 		INSERT INTO posts (
 			title,
@@ -43,6 +44,7 @@ func (s *PostgresStore) PostCreate(post *models.NewPost) error {
 }
 
 func (s *PostgresStore) PostGetAll(limit, offset int, domain string) ([]*models.Post, error) {
+	// get all post in pages according to request
 	query := `
 		SELECT * FROM posts
 		LIMIT $1 OFFSET $2
@@ -63,6 +65,7 @@ func (s *PostgresStore) PostGetAll(limit, offset int, domain string) ([]*models.
 }
 
 func (s *PostgresStore) PostGetById(id int, domain string) (*models.Post, error) {
+	// returns specific post using id
 	query := `
 		SELECT * FROM posts
 		WHERE id = $1
@@ -78,6 +81,7 @@ func (s *PostgresStore) PostGetById(id int, domain string) (*models.Post, error)
 }
 
 func (s *PostgresStore) PostDelete(id int) (*models.PostPic, error) {
+	// delete post
 	query1 := `
 	SELECT pic FROM posts
 	WHERE id = $1
@@ -113,6 +117,7 @@ func (s *PostgresStore) PostDelete(id int) (*models.PostPic, error) {
 }
 
 func (s *PostgresStore) PostUpdate(id int, post *models.PostUpdate) error {
+	// update post
 	picQuery := `
 		SELECT pic FROM posts
 		WHERE id = $1
@@ -157,6 +162,7 @@ func (s *PostgresStore) PostUpdate(id int, post *models.PostUpdate) error {
 }
 
 func (s *PostgresStore) PostGetOwner(id int) (*models.PostOwner, error) {
+	// return owner id of post
 	query := `
 		SELECT user_id FROM posts
 		WHERE id = $1
@@ -172,6 +178,7 @@ func (s *PostgresStore) PostGetOwner(id int) (*models.PostOwner, error) {
 }
 
 func (s *PostgresStore) PostExist(post_id int) error {
+	// checks and returns nill if post exists
 	post, err := s.db.Exec(`SELECT id FROM posts WHERE id = $1`, post_id)
 	if err != nil {
 		return err
@@ -184,4 +191,80 @@ func (s *PostgresStore) PostExist(post_id int) error {
 		return fmt.Errorf("post with id %v does not exists", post_id)
 	}
 	return nil
+}
+
+func (s *PostgresStore) PostTagAdd(post_id, tag_id int) error {
+	// add tag to the post
+	if err := s.PostExist(post_id); err != nil {
+		return err
+	}
+	if err := s.TagExist(tag_id); err != nil {
+		return err
+	}
+	query := `
+		INSERT INTO tag_post (post_id, tag_id)
+		VALUES ($1, $2);
+	`
+	s.db.Exec("COMMIT")
+	rows, err := s.db.Exec(query, post_id, tag_id)
+	if err != nil {
+		return err
+	}
+	rows_affected, err := rows.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if rows_affected == 0 {
+		return fmt.Errorf("tag was not added to the post")
+	}
+	return nil
+}
+
+func (s *PostgresStore) PostTagDelete(post_id, tag_id int) error {
+	// remove tag from the post
+	if err := s.PostExist(post_id); err != nil {
+		return err
+	}
+	if err := s.TagExist(tag_id); err != nil {
+		return err
+	}
+	query := `
+		DELETE FROM tag_post
+		WHERE post_id = $1 AND tag_id = $2
+	`
+	s.db.Exec("COMMIT")
+	rows, err := s.db.Exec(query, post_id, tag_id)
+	if err != nil {
+		return err
+	}
+	rows_affected, err := rows.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if rows_affected == 0 {
+		return fmt.Errorf("tag not found to delete")
+	}
+	return nil
+}
+
+func (s *PostgresStore) PostTagsAll(post_id, limit, offset int) ([]*models.TagPost, error) {
+	// returns all tags add to the specific post
+	query := `
+		SELECT * FROM tag_post
+		WHERE post_id = $1
+		LIMIT $2 OFFSET $3
+	`
+	rows, err := s.db.Query(query, post_id, limit, offset)
+	if err != nil {
+		return nil, err
+	}
+	tags := []*models.TagPost{}
+	for rows.Next() {
+		tag, err := ScanTagPost(rows)
+		if err != nil {
+			return nil, err
+		}
+		tags = append(tags, tag)
+	}
+	return tags, nil
 }

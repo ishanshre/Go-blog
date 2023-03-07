@@ -12,26 +12,31 @@ import (
 type ApiFunc func(http.ResponseWriter, *http.Request) error // signature of our handler
 
 type ApiError struct {
+	// error signature
 	Error string `json:"error"`
 }
 
 type ApiSuccess struct {
+	// success signature
 	Success string `json:"success"`
 }
 
 func WriteJSON(w http.ResponseWriter, status int, v any) error {
+	// It is a reponse to the request
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
 	return json.NewEncoder(w).Encode(v)
 }
 
 func MethodNotAlowed(w http.ResponseWriter, method string) error {
+	// middleware for unallowed methods
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusMethodNotAllowed)
 	return json.NewEncoder(w).Encode(ApiError{Error: fmt.Sprintf("%s method not allowed", method)})
 }
 
 func MakeHttpHandler(f ApiFunc) http.HandlerFunc {
+	// return http.HandlerFunc
 	return func(w http.ResponseWriter, r *http.Request) {
 		if err := f(w, r); err != nil {
 			WriteJSON(w, http.StatusBadRequest, ApiError{Error: err.Error()})
@@ -40,6 +45,7 @@ func MakeHttpHandler(f ApiFunc) http.HandlerFunc {
 }
 
 func GetId(r *http.Request) (int, error) {
+	// returns id in int
 	idstr := mux.Vars(r)["id"]
 	id, err := strconv.Atoi(idstr)
 	if err != nil {
@@ -49,6 +55,7 @@ func GetId(r *http.Request) (int, error) {
 }
 
 func GetCommentId(r *http.Request) (int, error) {
+	// returns commet id in int
 	idstr := mux.Vars(r)["comment_id"]
 	id, err := strconv.Atoi(idstr)
 	if err != nil {
@@ -58,6 +65,7 @@ func GetCommentId(r *http.Request) (int, error) {
 }
 
 func GetSlug(r *http.Request) string {
+	// middlewares that returns slug
 	slug := mux.Vars(r)["slug"]
 	return slug
 }

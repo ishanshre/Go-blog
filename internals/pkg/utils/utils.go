@@ -18,5 +18,6 @@ func CheckHttpProtocol(r *http.Request) string {
 }
 
 func CreateSlug(text string) string {
+	// create a slug and retuns it as string
 	return fmt.Sprintf("%s-%s", slug.Make(text), time.Now().Format(time.DateTime))
 }

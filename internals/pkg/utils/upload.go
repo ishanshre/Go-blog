@@ -10,10 +10,11 @@ import (
 )
 
 func UploadPostImage(r *http.Request) (string, error) {
+	// uploading images to the media files and returns filename of stored image
 	if err := r.ParseMultipartForm(8 * 1024 * 1024); err != nil {
 		return "", fmt.Errorf("image size must be less than 8 MB") //limit upload size
 	}
-	file, handler, err := r.FormFile("image")
+	file, handler, err := r.FormFile("image") // get the image
 	if err != nil {
 		return "", nil
 	}
@@ -22,6 +23,7 @@ func UploadPostImage(r *http.Request) (string, error) {
 	if err := os.MkdirAll("./media/uploads/posts", os.ModePerm); err != nil {
 		return "", err
 	}
+	// filename of the uploaded image
 	filename := fmt.Sprintf("%d%s", time.Now().UnixNano(), filepath.Ext(handler.Filename))
 	path := fmt.Sprintf("./media/uploads/posts/%v", filename)
 	new, err := os.Create(path)
@@ -33,6 +35,5 @@ func UploadPostImage(r *http.Request) (string, error) {
 	if err != nil {
 		return "", err
 	}
-
 	return filename, nil
 }
