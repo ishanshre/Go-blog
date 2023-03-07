@@ -3,7 +3,6 @@ package utils
 import (
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -19,10 +18,6 @@ func UploadPostImage(r *http.Request) (string, error) {
 		return "", nil
 	}
 	defer file.Close()
-	log.Println("File Info:")
-	log.Println("File Name: ", handler.Filename)
-	log.Println("File Size: ", handler.Size)
-	log.Println("File Type: ", handler.Header.Get("Content-Type"))
 	// create new directroy if does not already exists
 	if err := os.MkdirAll("./media/uploads/posts", os.ModePerm); err != nil {
 		return "", err

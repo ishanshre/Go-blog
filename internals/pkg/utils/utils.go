@@ -1,6 +1,12 @@
 package utils
 
-import "net/http"
+import (
+	"fmt"
+	"net/http"
+	"time"
+
+	"github.com/gosimple/slug"
+)
 
 func CheckHttpProtocol(r *http.Request) string {
 	// returns http or https based on connection type
@@ -9,4 +15,8 @@ func CheckHttpProtocol(r *http.Request) string {
 	} else {
 		return "http"
 	}
+}
+
+func CreateSlug(text string) string {
+	return fmt.Sprintf("%s-%s", slug.Make(text), time.Now().Format(time.DateTime))
 }

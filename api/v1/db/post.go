@@ -2,6 +2,7 @@ package db
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/ishanshre/Go-blog/api/v1/models"
 )
@@ -61,31 +62,31 @@ func (s *PostgresStore) PostGetAll(limit, offset int, domain string) ([]*models.
 	return posts, nil
 }
 
-func (s *PostgresStore) PostGetBySlug(slug, domain string) (*models.Post, error) {
+func (s *PostgresStore) PostGetById(id int, domain string) (*models.Post, error) {
 	query := `
 		SELECT * FROM posts
-		WHERE slug = $1
+		WHERE id = $1
 	`
-	rows, err := s.db.Query(query, slug)
+	rows, err := s.db.Query(query, id)
 	if err != nil {
 		return nil, err
 	}
 	for rows.Next() {
 		return ScanPosts(rows, domain)
 	}
-	return nil, fmt.Errorf("post %s does not exists", slug)
+	return nil, fmt.Errorf("post with id %v does not exists", id)
 }
 
-func (s *PostgresStore) PostDelete(slug string) (*models.PostPic, error) {
+func (s *PostgresStore) PostDelete(id int) (*models.PostPic, error) {
 	query1 := `
 	SELECT pic FROM posts
-	WHERE slug = $1
+	WHERE id = $1
 	`
 	query2 := `
 		DELETE FROM posts
-		WHERE slug = $1
+		WHERE id = $1
 	`
-	rows, err := s.db.Query(query1, slug)
+	rows, err := s.db.Query(query1, id)
 	if err != nil {
 		return nil, err
 	}
@@ -97,7 +98,7 @@ func (s *PostgresStore) PostDelete(slug string) (*models.PostPic, error) {
 		}
 	}
 	s.db.Exec("COMMIT")
-	row2, err := s.db.Exec(query2, slug)
+	row2, err := s.db.Exec(query2, id)
 	if err != nil {
 		return nil, err
 	}
@@ -106,7 +107,66 @@ func (s *PostgresStore) PostDelete(slug string) (*models.PostPic, error) {
 		return nil, err
 	}
 	if rows_affected == 0 {
-		return nil, fmt.Errorf("post %s does not exists", slug)
+		return nil, fmt.Errorf("post with id %v does not exists", id)
 	}
 	return postPic, nil
+}
+
+func (s *PostgresStore) PostUpdate(id int, post *models.PostUpdate) error {
+	picQuery := `
+		SELECT pic FROM posts
+		WHERE id = $1
+	`
+	picRows, err := s.db.Query(picQuery, id)
+	if err != nil {
+		return err
+	}
+	pic := new(models.PostPic)
+	for picRows.Next() {
+		picRows.Scan(&pic.Pic)
+	}
+	query := `
+		UPDATE posts
+		SET title = $2, slug = $3, content = $4,  pic = $5, updated_at = $6
+		WHERE id= $1
+	`
+	s.db.Exec("COMMIT")
+	rows, err := s.db.Exec(
+		query,
+		id,
+		post.Title,
+		post.Slug,
+		post.Content,
+		post.Pic,
+		post.Updated_at,
+	)
+	if err != nil {
+		return err
+	}
+	rows_affected, err := rows.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if rows_affected == 0 {
+		return fmt.Errorf("post not updated")
+	}
+	if err := os.Remove(fmt.Sprintf("./media/uploads/posts/%s", pic.Pic)); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *PostgresStore) PostGetOwner(id int) (*models.PostOwner, error) {
+	query := `
+		SELECT user_id FROM posts
+		WHERE id = $1
+	`
+	rows, err := s.db.Query(query, id)
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		return ScanOwner(rows)
+	}
+	return nil, fmt.Errorf("post does not exists")
 }

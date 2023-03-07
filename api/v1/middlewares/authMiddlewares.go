@@ -65,6 +65,45 @@ func JwtAuthPermissionHandler(handlerFunc http.HandlerFunc, s db.Storage) http.H
 	}
 }
 
+func JwtAuthOwnerPermissionHandler(handlerFunc http.HandlerFunc, s db.Storage) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		userId, err := utils.ExractTokenMetaData(r)
+		if err != nil {
+			log.Println(err)
+			permissionDenied(w)
+			return
+		}
+		account, err := s.UserInfoById(userId.ID)
+		if err != nil {
+			log.Println(err)
+			permissionDenied(w)
+			return
+		}
+		if err := utils.VerifyUser(account.ID, r); err != nil {
+			log.Println(err)
+			permissionDenied(w)
+			return
+		}
+		post_id, err := GetId(r)
+		if err != nil {
+			log.Println(err)
+			permissionDenied(w)
+			return
+		}
+		postOwner, err := s.PostGetOwner(post_id)
+		if err != nil {
+			log.Println(err)
+			permissionDenied(w)
+			return
+		}
+		if account.ID != postOwner.User_id {
+			permissionDenied(w)
+			return
+		}
+		handlerFunc(w, r)
+	}
+}
+
 func JwtAuthAdminHandler(handlerFunc http.HandlerFunc, s db.Storage) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		userId, err := utils.ExractTokenMetaData(r)

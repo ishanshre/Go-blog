@@ -66,3 +66,9 @@ func ScanPostPic(rows *sql.Rows) (*models.PostPic, error) {
 	err := rows.Scan(&post.Pic)
 	return post, err
 }
+
+func ScanOwner(rows *sql.Rows) (*models.PostOwner, error) {
+	post := new(models.PostOwner)
+	err := rows.Scan(&post.User_id)
+	return post, err
+}
