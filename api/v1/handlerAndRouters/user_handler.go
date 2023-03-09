@@ -2,6 +2,7 @@ package handlerAndRouters
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 
 	"github.com/ishanshre/Go-blog/api/v1/middlewares"
@@ -14,6 +15,7 @@ func (s *ApiServer) handleUserSignUp(w http.ResponseWriter, r *http.Request) err
 	if r.Method == "POST" {
 		req := new(models.RegisterUserRequest)
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			log.Println(err)
 			return err
 		}
 		encPass, err := utils.HashPassword(req.Password)
@@ -24,7 +26,7 @@ func (s *ApiServer) handleUserSignUp(w http.ResponseWriter, r *http.Request) err
 		if err := s.store.UserSignUp(user); err != nil {
 			return err
 		}
-		return middlewares.WriteJSON(w, http.StatusCreated, middlewares.ApiSuccess{Success: "user created"})
+		return middlewares.WriteJSON(w, http.StatusOK, middlewares.ApiSuccess{Success: "user created"})
 	}
 	return middlewares.MethodNotAlowed(w, r.Method)
 }
@@ -32,22 +34,28 @@ func (s *ApiServer) handleUserSignUp(w http.ResponseWriter, r *http.Request) err
 func (s *ApiServer) handleUserLogin(w http.ResponseWriter, r *http.Request) error {
 	// handler for login process
 	if r.Method == "POST" {
+		log.Println("Post login ")
 		req := new(models.LoginRequest)
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			log.Println(err)
 			return err
 		}
 		user, err := s.store.UserLogin(req.Username)
 		if err != nil {
+			log.Println(err)
 			return err
 		}
 		if err := utils.VerifyPassword(user.Password, req.Password); err != nil {
+			log.Println(err)
 			return err
 		}
 		res, err := utils.GenerateTokens(user.ID)
 		if err != nil {
+			log.Println(err)
 			return err
 		}
 		if err := s.store.UpdateLastLogin(user.ID); err != nil {
+			log.Println(err)
 			return err
 		}
 		return middlewares.WriteJSON(w, http.StatusOK, res)

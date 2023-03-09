@@ -24,6 +24,7 @@ type ApiSuccess struct {
 func WriteJSON(w http.ResponseWriter, status int, v any) error {
 	// It is a reponse to the request
 	w.Header().Set("Content-Type", "application/json")
+
 	w.WriteHeader(status)
 	return json.NewEncoder(w).Encode(v)
 }
@@ -31,6 +32,7 @@ func WriteJSON(w http.ResponseWriter, status int, v any) error {
 func MethodNotAlowed(w http.ResponseWriter, method string) error {
 	// middleware for unallowed methods
 	w.Header().Set("Content-Type", "application/json")
+
 	w.WriteHeader(http.StatusMethodNotAllowed)
 	return json.NewEncoder(w).Encode(ApiError{Error: fmt.Sprintf("%s method not allowed", method)})
 }
@@ -38,6 +40,10 @@ func MethodNotAlowed(w http.ResponseWriter, method string) error {
 func MakeHttpHandler(f ApiFunc) http.HandlerFunc {
 	// return http.HandlerFunc
 	return func(w http.ResponseWriter, r *http.Request) {
+		enableCors(&w)
+		if r.Method == "OPTIONS" {
+			w.WriteHeader(http.StatusOK)
+		}
 		if err := f(w, r); err != nil {
 			WriteJSON(w, http.StatusBadRequest, ApiError{Error: err.Error()})
 		}
@@ -68,4 +74,10 @@ func GetSlug(r *http.Request) string {
 	// middlewares that returns slug
 	slug := mux.Vars(r)["slug"]
 	return slug
+}
+
+func enableCors(w *http.ResponseWriter) {
+	(*w).Header().Add("Access-Control-Allow-Origin", "*")
+	(*w).Header().Add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+	(*w).Header().Add("Access-Control-Allow-Headers", "Accept, Origin, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 }
