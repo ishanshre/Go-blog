@@ -1,7 +1,7 @@
 version: "3.9"
 services:
   app:
-    container_name: goBlogAws
+    container_name: goBlog
     build: .
     ports:
       - 8000:8000
@@ -32,6 +32,8 @@ services:
     container_name: pgadmin4_container
     ports:
       - "5050:80"
+    expose:
+      - 5050
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
       PGADMIN_DEFAULT_PASSWORD: admin
@@ -42,9 +44,3 @@ services:
 
 volumes:
   goBlog_data:
-  pgadmin-data:
-
-
-networks:
-  goBlogNetwork:
-    driver: bridge
