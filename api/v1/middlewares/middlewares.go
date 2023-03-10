@@ -3,6 +3,7 @@ package middlewares
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"strconv"
 
@@ -23,7 +24,7 @@ type ApiSuccess struct {
 
 func WriteJSON(w http.ResponseWriter, status int, v any) error {
 	// It is a reponse to the request
-	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 
 	w.WriteHeader(status)
 	return json.NewEncoder(w).Encode(v)
@@ -31,7 +32,7 @@ func WriteJSON(w http.ResponseWriter, status int, v any) error {
 
 func MethodNotAlowed(w http.ResponseWriter, method string) error {
 	// middleware for unallowed methods
-	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 
 	w.WriteHeader(http.StatusMethodNotAllowed)
 	return json.NewEncoder(w).Encode(ApiError{Error: fmt.Sprintf("%s method not allowed", method)})
@@ -40,10 +41,9 @@ func MethodNotAlowed(w http.ResponseWriter, method string) error {
 func MakeHttpHandler(f ApiFunc) http.HandlerFunc {
 	// return http.HandlerFunc
 	return func(w http.ResponseWriter, r *http.Request) {
-		enableCors(&w)
-		if r.Method == "OPTIONS" {
-			w.WriteHeader(http.StatusOK)
-		}
+		enableCors(&w, r)
+		log.Println(w)
+
 		if err := f(w, r); err != nil {
 			WriteJSON(w, http.StatusBadRequest, ApiError{Error: err.Error()})
 		}
@@ -76,8 +76,13 @@ func GetSlug(r *http.Request) string {
 	return slug
 }
 
-func enableCors(w *http.ResponseWriter) {
-	(*w).Header().Add("Access-Control-Allow-Origin", "*")
-	(*w).Header().Add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-	(*w).Header().Add("Access-Control-Allow-Headers", "Accept, Origin, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+func enableCors(w *http.ResponseWriter, r *http.Request) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+	(*w).Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS")
+	(*w).Header().Set("Access-Control-Allow-Credentials", "true")
+	(*w).Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With, XMLHttpRequest")
+	if r.Method == "OPTIONS" {
+		(*w).WriteHeader(http.StatusOK)
+		return
+	}
 }

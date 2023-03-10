@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/gosimple/slug"
@@ -41,13 +42,19 @@ func (s *ApiServer) handlePostCreate(w http.ResponseWriter, r *http.Request) err
 func (s *ApiServer) handlePostAll(w http.ResponseWriter, r *http.Request) error {
 	// handler for retreive all post with page
 	if r.Method == "GET" {
-		page := new(models.Page)
-		if err := json.NewDecoder(r.Body).Decode(&page); err != nil {
+		log.Println("All post selected")
+
+		limit, err := strconv.Atoi(r.URL.Query().Get("limit"))
+		if err != nil {
+			return err
+		}
+		offset, err := strconv.Atoi(r.URL.Query().Get("offset"))
+		if err != nil {
 			return err
 		}
 		protocol := utils.CheckHttpProtocol(r)
 		domain := fmt.Sprintf("%s://%s", protocol, r.Host)
-		posts, err := s.store.PostGetAll(page.Limit, page.Offset, domain)
+		posts, err := s.store.PostGetAll(limit, offset, domain)
 		if err != nil {
 			return err
 		}

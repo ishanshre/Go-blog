@@ -16,4 +16,10 @@ require (
 	github.com/gosimple/slug v1.13.1
 )
 
-require github.com/gosimple/unidecode v1.0.1 // indirect
+require github.com/felixge/httpsnoop v1.0.1 // indirect
+
+require (
+	github.com/gorilla/handlers v1.5.1
+	github.com/gosimple/unidecode v1.0.1 // indirect
+	github.com/rs/cors v1.8.3 // indirect
+)

@@ -1,8 +1,28 @@
 version: "3.9"
 services:
+  app:
+    container_name: goBlog
+    build: .
+    ports:
+      - 8000:8000
+    restart: on-failure
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+    expose:
+      - 8000
+    entrypoint:
+      [
+        "/app/wait-for.sh",
+        "postgres:5432",
+        "--",
+        "/app/start.sh"
+      ]
+    command: [ "/app/main" ]
   db:
     image: postgres
-    container_name: goBlog
+    container_name: goBlogAws_db
     ports:
       - "5432:5432"
     environment:

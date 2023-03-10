@@ -113,6 +113,7 @@ func (s *ApiServer) handleUsersAll(w http.ResponseWriter, r *http.Request) error
 func (s *ApiServer) handleMe(w http.ResponseWriter, r *http.Request) error {
 	// handler for reteriving profile
 	if r.Method == "GET" {
+		log.Println(r.Header.Get("Authorization"))
 		userData, err := utils.ExractTokenMetaData(r)
 		if err != nil {
 			return err
