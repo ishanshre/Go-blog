@@ -12,8 +12,6 @@ services:
       - db
     expose:
       - 8000
-    networks:
-      - goBlogNetwork
   db:
     image: postgres
     container_name: goBlogAws_db
@@ -39,8 +37,7 @@ services:
       PGADMIN_DEFAULT_PASSWORD: admin
     volumes:
       - pgadmin-data:/var/lib/pgadmin
-    networks:
-      - goBlogNetwork
 
 volumes:
   goBlog_data:
+  pgadmin-data:
