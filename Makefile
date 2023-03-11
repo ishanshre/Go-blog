@@ -23,4 +23,4 @@ dockerLog:
 	docker-compose logs
 
 run:
-	go build cmd/Go-blog/main.go && ./main
+	go build main.go && ./main
