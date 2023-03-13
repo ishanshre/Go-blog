@@ -20,7 +20,12 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"limit\":10,\n    \"offset\":0\n}"
+							"raw": "{\n    \"limit\":10,\n    \"offset\":0\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
 						},
 						"url": {
 							"raw": "127.0.0.1:8000/api/v1/posts",
@@ -47,7 +52,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "127.0.0.1:8000/api/v1/post/15",
+							"raw": "127.0.0.1:8000/api/v1/post/2",
 							"host": [
 								"127",
 								"0",
@@ -59,7 +64,7 @@
 								"api",
 								"v1",
 								"post",
-								"15"
+								"2"
 							]
 						},
 						"description": "- Returns a post by id\n- Any one can view post"
@@ -73,7 +78,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJFeHBpcmVzQXQiOjE2NzgxODc3MjEsIklzc3VlZEF0IjoxNjc4MTg2ODIxLCJ1c2VyX2lkIjoyfQ._1v64fKVhf4WY54_aee_qo33GkLz7p_A_hUeifvuWOw",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJFeHBpcmVzQXQiOjE2Nzg0NjAxNzAsIklzc3VlZEF0IjoxNjc4NDU5MjcwLCJ1c2VyX2lkIjoxfQ.M_rtGwkKIoFhxuEuC3XNPdXAQUSTq_-hkT2XnZnKQGs",
 								"type": "text"
 							}
 						],
@@ -125,7 +130,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJFeHBpcmVzQXQiOjE2NzgxODc5MDcsIklzc3VlZEF0IjoxNjc4MTg3MDA3LCJ1c2VyX2lkIjoyfQ.j6JsPRGT320tLfgTGVQV_wL2pUYOueaibQWV2UPEurU",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJFeHBpcmVzQXQiOjE2Nzg0NjAxNzAsIklzc3VlZEF0IjoxNjc4NDU5MjcwLCJ1c2VyX2lkIjoxfQ.M_rtGwkKIoFhxuEuC3XNPdXAQUSTq_-hkT2XnZnKQGs",
 								"type": "text"
 							}
 						],
@@ -135,7 +140,7 @@
 								{
 									"key": "image",
 									"type": "file",
-									"src": "/home/ishan/Pictures/wallpaperflare.com_wallpaper (9).jpg"
+									"src": "/home/ishan/Pictures/11.jpg"
 								},
 								{
 									"key": "title",
@@ -150,7 +155,7 @@
 							]
 						},
 						"url": {
-							"raw": "127.0.0.1:8000/api/v1/post/19/update",
+							"raw": "127.0.0.1:8000/api/v1/post/1/update",
 							"host": [
 								"127",
 								"0",
@@ -162,7 +167,7 @@
 								"api",
 								"v1",
 								"post",
-								"19",
+								"1",
 								"update"
 							]
 						},
@@ -174,9 +179,15 @@
 					"name": "Delete Post",
 					"request": {
 						"method": "DELETE",
-						"header": [],
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJFeHBpcmVzQXQiOjE2Nzg0NjAxNzAsIklzc3VlZEF0IjoxNjc4NDU5MjcwLCJ1c2VyX2lkIjoxfQ.M_rtGwkKIoFhxuEuC3XNPdXAQUSTq_-hkT2XnZnKQGs",
+								"type": "text"
+							}
+						],
 						"url": {
-							"raw": "127.0.0.1:8000/api/v1/post/18/delete",
+							"raw": "127.0.0.1:8000/api/v1/post/1/delete",
 							"host": [
 								"127",
 								"0",
@@ -188,7 +199,7 @@
 								"api",
 								"v1",
 								"post",
-								"18",
+								"1",
 								"delete"
 							]
 						},
@@ -676,6 +687,38 @@
 								"3"
 							]
 						}
+					},
+					"response": []
+				},
+				{
+					"name": "Use is Authenticated or Not",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJFeHBpcmVzQXQiOjE2Nzg2NzI2MDMsIklzc3VlZEF0IjoxNjc4NjcxNzAzLCJ1c2VyX2lkIjoxfQ.PABp85rxXH8ehp28ItWOXl9zaf_A1CQqJn-SHmgSx0Q",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "127.0.0.1:8000/api/v1/auth/token/valid",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"token",
+								"valid"
+							]
+						},
+						"description": "Retrives tokens. check if it valid or not. If valid return user authenticated is true else false"
 					},
 					"response": []
 				}

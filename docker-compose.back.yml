@@ -2,7 +2,7 @@ version: "3.9"
 services:
   db:
     image: postgres
-    container_name: goBlog
+    container_name: goBlogAws_db
     ports:
       - "5432:5432"
     environment:
@@ -13,19 +13,19 @@ services:
       - goBlog_data:/var/lib/postgresql/data
     expose:
       - 5432
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: pgadmin4_container
+  app:
+    container_name: goBlog
+    build: .
     ports:
-      - "5050:80"
-    expose:
-      - 5050
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: admin
+      - 8000:8000
     volumes:
-      - pgadmin-data:/var/lib/pgadmin
-
+      - .:/app
+    restart: on-failure
+    depends_on:
+      - db
+    expose:
+      - 8000
+    command: go run main.go
+    
 volumes:
   goBlog_data:
-  pgadmin-data:

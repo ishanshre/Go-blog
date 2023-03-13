@@ -12,4 +12,5 @@ func userRouter(r *mux.Router, s *ApiServer) {
 	r.HandleFunc("/api/v1/auth/user/{id}", middlewares.JwtAuthPermissionHandler(middlewares.MakeHttpHandler(s.handleUserById), s.store))
 	r.HandleFunc("/api/v1/auth/users", middlewares.JwtAuthAdminHandler(middlewares.MakeHttpHandler(s.handleUsersAll), s.store))
 	r.HandleFunc("/api/v1/auth/me", middlewares.JwtAuthHandler(middlewares.MakeHttpHandler(s.handleMe), s.store))
+	r.HandleFunc("/api/v1/auth/token/valid", middlewares.JwtAuthHandler(middlewares.MakeHttpHandler(s.handleValidToken), s.store))
 }

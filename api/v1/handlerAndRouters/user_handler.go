@@ -126,3 +126,14 @@ func (s *ApiServer) handleMe(w http.ResponseWriter, r *http.Request) error {
 	}
 	return middlewares.MethodNotAlowed(w, r.Method)
 }
+
+func (s *ApiServer) handleValidToken(w http.ResponseWriter, r *http.Request) error {
+	if r.Method == "POST" {
+		_, err := utils.TokenValid(r)
+		if err != nil {
+			return err
+		}
+		return middlewares.WriteJSON(w, http.StatusOK, map[string]string{"isUserAuthenticated": "true"})
+	}
+	return middlewares.MethodNotAlowed(w, r.Method)
+}
