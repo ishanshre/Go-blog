@@ -19,6 +19,7 @@ type Storage interface {
 	UserInfoById(int) (*models.User, error)
 	UsersAll() ([]*models.User, error)
 	UserDelete(int) error
+	UserGetUsername(id int) (*models.GetUsername, error)
 
 	// Tag Interface
 	TagCreate(*models.Tag) error

@@ -110,3 +110,9 @@ func ScanTagPost(rows *sql.Rows) (*models.TagPost, error) {
 	)
 	return tag, err
 }
+
+func ScanUsername(rows *sql.Rows) (*models.GetUsername, error) {
+	username := new(models.GetUsername)
+	err := rows.Scan(&username.Username)
+	return username, err
+}

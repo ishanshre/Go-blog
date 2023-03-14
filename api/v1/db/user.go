@@ -133,3 +133,18 @@ func (s *PostgresStore) UserDelete(id int) error {
 	}
 	return nil
 }
+
+func (s *PostgresStore) UserGetUsername(id int) (*models.GetUsername, error) {
+	query := `
+		SELECT username FROM users
+		WHERE id = $1
+	`
+	rows, err := s.db.Query(query, id)
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		return ScanUsername(rows)
+	}
+	return nil, fmt.Errorf("error in getting username")
+}

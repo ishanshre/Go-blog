@@ -53,6 +53,10 @@ type UserPass struct {
 	Password string `json:"password"`
 }
 
+type GetUsername struct {
+	Username string `json:"username"`
+}
+
 type LoginRequest struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
