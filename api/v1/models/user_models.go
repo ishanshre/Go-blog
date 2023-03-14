@@ -40,6 +40,7 @@ type RegisterUserRequest struct {
 
 type LoginResponse struct {
 	ID           int    `json:"id"`
+	Username     string `json:"username"`
 	AccessToken  string `json:"access_token"`
 	RefreshToken string `json:"refresh_token"`
 }

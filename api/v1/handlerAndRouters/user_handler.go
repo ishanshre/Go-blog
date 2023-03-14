@@ -49,7 +49,7 @@ func (s *ApiServer) handleUserLogin(w http.ResponseWriter, r *http.Request) erro
 			log.Println(err)
 			return err
 		}
-		res, err := utils.GenerateTokens(user.ID)
+		res, err := utils.GenerateTokens(user.ID, req.Username)
 		if err != nil {
 			log.Println(err)
 			return err

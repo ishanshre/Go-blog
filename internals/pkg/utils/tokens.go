@@ -12,7 +12,7 @@ import (
 	"github.com/ishanshre/Go-blog/api/v1/models"
 )
 
-func GenerateTokens(id int) (*models.LoginResponse, error) {
+func GenerateTokens(id int, username string) (*models.LoginResponse, error) {
 	/*
 		Generating access and refresh tokens
 	*/
@@ -20,6 +20,7 @@ func GenerateTokens(id int) (*models.LoginResponse, error) {
 		"ExpiresAt": jwt.NewNumericDate(time.Now().Add(time.Minute * 15)).Unix(),
 		"IssuedAt":  jwt.NewNumericDate(time.Now()),
 		"user_id":   id,
+		"username":  username,
 	}
 	secret := os.Getenv("JWT_SECRET")
 	ss := jwt.NewWithClaims(jwt.SigningMethodHS256, access_claims)
@@ -31,6 +32,7 @@ func GenerateTokens(id int) (*models.LoginResponse, error) {
 		"ExpiresAt": jwt.NewNumericDate(time.Now().Add(time.Hour * 1)).Unix(),
 		"IssuedAt":  jwt.NewNumericDate(time.Now()),
 		"user_id":   id,
+		"username":  username,
 	}
 	rs := jwt.NewWithClaims(jwt.SigningMethodHS256, refresh_claims)
 	refresh_token, err := rs.SignedString([]byte(secret))
@@ -39,6 +41,7 @@ func GenerateTokens(id int) (*models.LoginResponse, error) {
 	}
 	return &models.LoginResponse{
 		ID:           id,
+		Username:     username,
 		AccessToken:  access_token,
 		RefreshToken: refresh_token,
 	}, nil
